@@ -37,6 +37,7 @@ SOFTWARE.
 #include <shared_mutex>
 #include <any>
 #include <iostream>
+#include <mutex>
 
 namespace lklibs
 {
