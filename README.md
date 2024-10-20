@@ -41,9 +41,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(myProject)
 
-add_executable(myProject main.cpp)
-
-target_link_libraries(myProject PRIVATE libcpp-event-hub)
+add_executable(myProject main.cpp libcpp-event-hub.hpp)
 
 ```
 
