@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "libcpp-event-hub.hpp"
 #include <string>
+#include <thread>
 
 using namespace lklibs;
 
@@ -20,6 +21,8 @@ TEST(EventHubTest, AddListenerAndEmitString)
     });
 
     eventHub.emit("testEvent", "testSender", std::string("testData"));
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     EXPECT_TRUE(listenerCalled);
 
@@ -42,6 +45,8 @@ TEST(EventHubTest, AddListenerAndEmitInt)
     });
 
     eventHub.emit("testEvent", "testSender", 7);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     EXPECT_TRUE(listenerCalled);
 
@@ -75,6 +80,8 @@ TEST(EventHubTest, GeneralListener)
 
     eventHub.emit("testEvent", "testSender", std::string("testData"));
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
     EXPECT_TRUE(generalListenerCalled);
     EXPECT_TRUE(specificListenerCalled);
 
@@ -96,6 +103,8 @@ TEST(EventHubTest, RemoveListener)
     eventHub.removeListener("testEvent", listenerId);
 
     eventHub.emit("testEvent", "testSender", std::string("testData"));
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     EXPECT_FALSE(listenerCalled);
 }

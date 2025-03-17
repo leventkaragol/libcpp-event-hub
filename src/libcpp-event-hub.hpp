@@ -1,7 +1,7 @@
 /*
 
 Thread-safe generic event library for C++ (17+)
-version 1.0.0
+version 1.1.0
 https://github.com/leventkaragol/libcpp-event-hub
 
 If you encounter any issues, please submit a ticket at https://github.com/leventkaragol/libcpp-event-hub/issues
@@ -38,6 +38,7 @@ SOFTWARE.
 #include <any>
 #include <iostream>
 #include <mutex>
+#include <future>
 
 namespace lklibs
 {
@@ -81,7 +82,10 @@ namespace lklibs
             {
                 for (const auto& [id, listener] : listeners_.at(eventName))
                 {
-                    listener(eventName, sender, eventData);
+                    std::thread([listener, eventName, sender, eventData]()
+                    {
+                        listener(eventName, sender, eventData);
+                    }).detach();
                 }
             }
 
@@ -89,7 +93,10 @@ namespace lklibs
             {
                 for (const auto& [id, listener] : listeners_.at("*"))
                 {
-                    listener(eventName, sender, eventData);
+                    std::thread([listener, eventName, sender, eventData]()
+                    {
+                        listener(eventName, sender, eventData);
+                    }).detach();
                 }
             }
         }
@@ -107,7 +114,7 @@ namespace lklibs
         {
             std::unique_lock lock(mutex_);
 
-            auto id = nextListenerId_++;
+            const auto id = nextListenerId_++;
 
             auto wrappedListener = [listener](const std::string& eventName, const std::string& sender, const std::any& data)
             {
